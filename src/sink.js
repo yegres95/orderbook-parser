@@ -1,12 +1,15 @@
+const store = require("./store");
+
 // Each how many microseconds it will calculate and display the speed
 const FREQUENCY = 10000;
 
 const updates = [];
 
 module.exports = {
-  send(...params) {
-    updates.push(Date.now());
-    // This is where all the orderbooks updates go to be processed by an external system.
+  send(params) {
+    const timeStamp = Date.now()
+    updates.push(timeStamp);
+    store.ingest(params, timeStamp);
   }
 };
 
