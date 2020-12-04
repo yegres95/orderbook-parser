@@ -1,4 +1,4 @@
-const store = require("./store");
+const store = require("./store/index");
 
 // Each how many microseconds it will calculate and display the speed
 const FREQUENCY = 10000;
@@ -9,7 +9,7 @@ module.exports = {
   send(params) {
     const timeStamp = Date.now()
     updates.push(timeStamp);
-    store.ingest(params, timeStamp);
+    store.orderbook.ingest(params, timeStamp);
   }
 };
 
