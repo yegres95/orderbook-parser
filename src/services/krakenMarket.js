@@ -1,5 +1,4 @@
 const WebSocket = require("ws");
-const sink = require("../sink");
 
 // See https://www.kraken.com/features/websocket-api#message-book for payload example
 const normalizePayload = payload => {
@@ -13,7 +12,7 @@ const normalizePayload = payload => {
     return { ask, bid, asks, bids, pair };
   };
   
-function Kraken({ symbol }) {
+function Kraken({ symbol }, sink) {
     const ws = new WebSocket("wss://ws.kraken.com");
   
     ws.onopen = function onOpen() {
