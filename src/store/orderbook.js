@@ -35,20 +35,22 @@ class OrderbookStore {
     
     updateOrderBook(pair, data, type) {
         const list = this.orderbooks[pair][type];
+        data = this.filterDoubles(data); //Needs to be filtered as sometimes multiple updates come for 1 price
         const prices = this.getPrices(data);
         for (let i = 0; i < list.length; i++) {
-            const item = list[i];
-            const matchedIndex = prices.indexOf(item[PRICE]);
+            const matchedIndex = prices.indexOf(list[i][PRICE]);
             if (matchedIndex !== -1) {
                 list[i] = data[matchedIndex];
                 prices.splice(matchedIndex, 1); //Remove the matched number for later filtering
                 data.splice(matchedIndex, 1);
             }
-            if (parseFloat(item[1]) === 0) {
+            
+            if (parseFloat(list[i][1]) === 0) {
                 list.splice(i, 1);
                 i--;
             }
         }
+
         if (prices.length != 0) { // If all the price updates did not fit into the old snapshot of the order book
             this.updateOutOfBookPrice(pair, data, prices, list, type)
         }
@@ -68,6 +70,26 @@ class OrderbookStore {
             })
         }
         list.splice(this.orderBookDepths[pair], list.length)
+    }
+
+    filterDoubles(data) {
+        let hash = {}
+        for (let i = 0; i < data.length; i++) {
+            const item = data[i];
+            if (hash[item[PRICE]]) { //If exists in hash
+                if (hash[item[PRICE]][TIMESTAMP] < item[TIMESTAMP]) { //If out of date information
+                    hash[item[PRICE]] = item
+                }
+            } else {
+                hash[item[PRICE]] = item;
+            }
+        }
+        let finalArray = [];
+        let keys = Object.keys(hash);
+        for (let i = 0; i < keys.length; i++) {
+            finalArray.push(hash[keys[i]]);
+        }
+        return finalArray;
     }
     
     getPrices(list) {
