@@ -28,7 +28,7 @@ class Sink {
 
     setInterval(() => {
       Object.keys(this.pairsSending).forEach(pair => {
-        wsSend({pair, updatesPerMinute: updatesPerMinute[pair], data: this.store.getOrderbook(pair)}, LOAD_ORDERBOOK);
+        wsSend({pair, updatesPerMinute: this.updatesPerMinute[pair], data: this.store.getOrderbook(pair)}, LOAD_ORDERBOOK);
       })
     }, UPDATE_FREQUENCY);
   }
