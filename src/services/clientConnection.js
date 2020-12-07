@@ -27,19 +27,23 @@ function Client(orderbookStore) {
   });
 
   wss.on('connection', function connection(ws) {
-    wss.on('message', msgReceived)
-    wss.on('open', wsOpened);
-    const data = {payload: orderbookStore.getOrderbook(), channel: LOAD_ORDERBOOK}
-    ws.send(JSON.stringify(data));
     clients.push(ws)
+    const id = clients.length-1
+    ws.on('message', msgReceived)
+    ws.on('open', wsOpened);
+    ws.on('close', () => {wsClosed(id)});
   });
 
   
 }
 
+function wsClosed(id) {
+  clients.splice(id, 1)
+  console.log(`[socket] - closed ID: ${id} - connections left: ${clients.length}`)
+}
+
 function msgReceived(data) {
-  console.log("GOT DATA");
-  console.log(data);
+  console.log(`[socket] - ${data}`);
 }
 
 function wsOpened(data) {
