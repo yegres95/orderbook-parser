@@ -19,11 +19,10 @@ class Sink {
     }, FREQUENCY);
   }
 
-  send(params) {
-    const timeStamp = Date.now()
-    this.updates.push(timeStamp);
-    this.store.ingest(params, timeStamp);
-    wsSend(this.store.getOrderbook(), LOAD_ORDERBOOK);
+  send(pair, params) {
+    this.updates.push(Date.now());
+    this.store.ingest(pair, params);
+    wsSend(this.store.getOrderbook(pair), LOAD_ORDERBOOK);
   }
 
 }

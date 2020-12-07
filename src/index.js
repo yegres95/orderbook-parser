@@ -7,5 +7,5 @@ const Sink = require("./sink");
 
 const orderbookStore = new store.orderbook();
 const sink = new Sink(orderbookStore)
-const exchange = Kraken({ symbol: "ETH/XBT" }, sink);
+const exchange = Kraken(["ETH/XBT", "XBT/USD"], sink);
 const connections = Client(orderbookStore);

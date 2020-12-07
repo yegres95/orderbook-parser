@@ -12,7 +12,7 @@ const normalizePayload = payload => {
     return { ask, bid, asks, bids, pair };
   };
   
-function Kraken({ symbol }, sink) {
+function Kraken(symbols, sink) {
     const ws = new WebSocket("wss://ws.kraken.com");
   
     ws.onopen = function onOpen() {
@@ -21,7 +21,7 @@ function Kraken({ symbol }, sink) {
       ws.send(
         JSON.stringify({
           event: "subscribe",
-          pair: [symbol],
+          pair: symbols,
           subscription: {
             name: "book",
             depth: 100
@@ -36,16 +36,16 @@ function Kraken({ symbol }, sink) {
       if (Array.isArray(payload)) {
         const { ask, asks, bid, bids, pair } = normalizePayload(payload);
   
-        if (pair !== symbol) {
+        if (!symbols.includes(pair)) {
           throw new Error(`${pair} update received. Expected: ${symbol}`);
         }
   
         if (bids && asks) {
-          sink.send({ bids, asks });
+          sink.send(pair, { bids, asks });
         } else {
           // These are updates, not orderbook snapshots. In a normal implementation they should update the last
           // orderbook snapshot in memory and deliver the up-to-date orderbook.
-          sink.send({ bids: bid, asks: ask });
+          sink.send(pair, { bids: bid, asks: ask });
         }
       } else {
         const { event } = payload;
