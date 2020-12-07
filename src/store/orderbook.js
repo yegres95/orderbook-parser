@@ -22,7 +22,7 @@ class OrderbookStore {
             //console.log(`[store] Orderbook update`);
             this.update(pair, data);
         }
-        this.validateOrderBook(pair)
+        //this.validateOrderBook(pair)
     }
     
     update(pair, data) {
@@ -44,28 +44,30 @@ class OrderbookStore {
                 prices.splice(matchedIndex, 1); //Remove the matched number for later filtering
                 data.splice(matchedIndex, 1);
             }
+            if (parseFloat(item[1]) === 0) {
+                list.splice(i, 1);
+                i--;
+            }
         }
         if (prices.length != 0) { // If all the price updates did not fit into the old snapshot of the order book
             this.updateOutOfBookPrice(pair, data, prices, list, type)
         }
     }
-    
+
     updateOutOfBookPrice(pair, data, prices, list, type) {
         for (let i = 0; i < prices.length; i++) {
-            const price = prices[i];
-            /* If ask, check if price is smaller than the first array entry else if bid, check if bigger */
-            let front = (type === ASKS) ? (price < list[0][PRICE]) : (price > list[0][PRICE]);
-            /* If ask, check if price is bigger than last array entry else if bid, check if smaller */
-            let back = (type === ASKS) ? (price > list[this.orderBookDepths[pair]-1][PRICE]) : (price < list[this.orderBookDepths[pair]-1][PRICE]); 
-            /* The bid and ask arrays are mirrored, hence the need for above */
-            if (front) {
-                list.unshift(data[i]);
-                list.pop();
-            } else if (back) {
-                list.push(data[i]);
-                list.shift();
-            }
+            list.push(data[i]);
         }
+        if (type === ASKS) { //Goes UP
+            list.sort(function(a, b) {
+                return parseFloat(a) - parseFloat(b);
+            })
+        } else { //Goes DOWN
+            list.sort(function(a, b) {
+                return parseFloat(b) - parseFloat(a);
+            })
+        }
+        list.splice(this.orderBookDepths[pair], list.length)
     }
     
     getPrices(list) {
