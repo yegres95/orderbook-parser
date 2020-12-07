@@ -1,9 +1,9 @@
 const wsSend = require("./services/clientConnection").send;
-const { LOAD_ORDERBOOK } = require('./services/constants')
+const { LOAD_ORDERBOOK } = require('./constants')
+const config = require('../config.json');
 
 // Each how many milliseconds it will calculate and display the speed
 const FREQUENCY = 10000;
-const UPDATE_FREQUENCY = 1000; // How often the user gets sent the updated orderbooks
 
 class Sink {
 
@@ -13,7 +13,7 @@ class Sink {
     this.pairsSending = {};
     this.updatesPerMinute = {};
 
-    setInterval(() => {
+    setInterval(() => { //Update the updates per minute stat every FREQUENCY
       let pairs = Object.keys(this.pairsSending);
       for (let i = 0; i < pairs.length; i++) {
         let pair = pairs[i];
@@ -26,11 +26,11 @@ class Sink {
       }
     }, FREQUENCY);
 
-    setInterval(() => {
+    setInterval(() => { //Sned updates to ws every UPDATE_FREQUENCY
       Object.keys(this.pairsSending).forEach(pair => {
         wsSend({pair, updatesPerMinute: this.updatesPerMinute[pair], data: this.store.getOrderbook(pair)}, LOAD_ORDERBOOK);
       })
-    }, UPDATE_FREQUENCY);
+    }, config.update_frequency);
   }
 
   send(pair, params) {

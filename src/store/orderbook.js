@@ -1,8 +1,6 @@
 // Simple memory store for orderbook
 
-//later have an external STATICS file
-const [PRICE, VOLUME, TIMESTAMP] = [0, 1, 2];
-const [BIDS, ASKS] = ['bids', 'asks'];
+const { PRICE, BIDS, ASKS, TIMESTAMP } = require('../constants')
 
 class OrderbookStore {
 

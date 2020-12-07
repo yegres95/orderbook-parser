@@ -1,6 +1,6 @@
 var http = require('http');
 
-const orderBooks = ["ETH/XBT", "XBT/USD"];
+const config = require('../config.json');
 
 const store = require("./store/index");
 const Kraken = require("./services/krakenMarket");
@@ -9,5 +9,5 @@ const Sink = require("./sink");
 
 const orderbookStore = new store.orderbook();
 const sink = new Sink(orderbookStore)
-const exchange = Kraken(orderBooks, sink);
+const exchange = Kraken(config.orderbooks, sink);
 const connections = Client(orderbookStore);

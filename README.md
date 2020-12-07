@@ -1,17 +1,8 @@
-# `orderbook-parser`
+# orderbook-parser
+Order book parser server to serve the orderbook-app
 
-Example projects that shows how to obtain orderbook snapshots from Kraken.
+### `yarn install`
+Install first
 
-## Requirements
-
-- You need a relatively new version of Node.js (this was tested with version 13.3.0)
-- `yarn` package manager
-
-## How to install
-
-- `git clone` this repo
-- Run `yarn` to install the dependencies
-
-## How to run
-
-Just `yarn start`.
+### `yarn start`
+Start the server before the react app to be able to serve over ws

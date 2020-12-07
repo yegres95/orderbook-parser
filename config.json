@@ -1,0 +1,4 @@
+{
+    "orderbooks": ["ETH/XBT", "XBT/USD", "XBT/GBP", "XBT/EUR"],
+    "update_frequency": 1000
+}
