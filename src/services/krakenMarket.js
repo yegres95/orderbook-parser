@@ -41,11 +41,11 @@ function Kraken(symbols, sink) {
         }
   
         if (bids && asks) {
-          sink.send(pair, { bids, asks });
+          sink.send(`Kraken ${pair}`, { bids, asks });
         } else {
           // These are updates, not orderbook snapshots. In a normal implementation they should update the last
           // orderbook snapshot in memory and deliver the up-to-date orderbook.
-          sink.send(pair, { bids: bid, asks: ask });
+          sink.send(`Kraken ${pair}`, { bids: bid, asks: ask });
         }
       } else {
         const { event } = payload;
