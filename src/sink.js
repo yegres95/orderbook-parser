@@ -21,7 +21,7 @@ class Sink {
           (this.updates[pair].filter(u => u > Date.now() - FREQUENCY).length * 60000) /
           FREQUENCY;
     
-        updatesPerMinute[pair] = updatesPerMinute;
+        this.updatesPerMinute[pair] = updatesPerMinute;
         console.log(`[sink] Speed: ${updatesPerMinute} orderbooks per minute -> ${pair}`);
       }
     }, FREQUENCY);
