@@ -86,7 +86,6 @@ class OrderbookStore {
         }
     }
 
-
     getOrderbook(pair) {
         return this.orderbooks[pair];
     }
