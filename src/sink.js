@@ -22,7 +22,7 @@ class Sink {
   send(pair, params) {
     this.updates.push(Date.now());
     this.store.ingest(pair, params);
-    wsSend(this.store.getOrderbook(pair), LOAD_ORDERBOOK);
+    wsSend({pair, data: this.store.getOrderbook(pair)}, LOAD_ORDERBOOK);
   }
 
 }
