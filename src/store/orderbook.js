@@ -75,7 +75,7 @@ class OrderbookStore {
         for (let i = 0; i < data.length; i++) {
             const item = data[i];
             if (hash[item[PRICE]]) { //If exists in hash
-                if (hash[item[PRICE]][TIMESTAMP] < item[TIMESTAMP]) { //If out of date information
+                if (parseFloat(item[TIMESTAMP]) > parseFloat(hash[item[PRICE]][TIMESTAMP])) { //If out of date information
                     hash[item[PRICE]] = item
                 }
             } else {
